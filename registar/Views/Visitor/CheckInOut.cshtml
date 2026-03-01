@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Check In / Check Out";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4>Visitor Check In / Check Out</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Visitor ID -->
+                    <div class="mb-3">
+                        <label class="form-label">Visitor ID</label>
+                        <input type="text" class="form-control"
+                               placeholder="Enter Visitor ID" />
+                    </div>
+
+                    <!-- Action -->
+                    <div class="mb-3">
+                        <label class="form-label">Select Action</label>
+                        <select class="form-control">
+                            <option>-- Select --</option>
+                            <option>Check In</option>
+                            <option>Check Out</option>
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="text-center">
+                        <button class="btn btn-success px-4">
+                            Submit
+                        </button>
+                        <a href="@Url.Action("Index", "Home")"
+                           class="btn btn-secondary px-4 ms-2">
+                            Back
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

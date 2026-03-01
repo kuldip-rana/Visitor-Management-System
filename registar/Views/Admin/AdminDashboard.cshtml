@@ -1,0 +1,131 @@
+﻿@model IEnumerable<registar.Models.Visitor>
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #f8fafc;
+    }
+
+    .admin-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .table thead th {
+        background-color: #f1f5f9;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border: none;
+    }
+
+    .status-badge {
+        padding: 0.35rem 0.65rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .btn-action {
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+</style>
+
+<div class="container-fluid py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-slate-800 m-0">Visitor Approvals</h3>
+            <p class="text-muted small">Manage pending security entry requests</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary btn-action" onclick="location.href='@Url.Action("VisitHistory", "Admin")'">
+                <i class="bi bi-clock-history me-2"></i>History
+            </button>
+
+            <button class="btn btn-outline-primary btn-action" onclick="location.href='@Url.Action("Departments", "Admin")'">
+                <i class="bi bi-clock-history me-2"></i>Departments
+            </button>
+            <button class="btn btn-primary btn-action"><i class="bi bi-gear me-2"></i>Settings</button>
+        </div>
+    </div>
+
+    <div class="admin-card overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Visitor Details</th>
+                    <th>Department</th>
+                    <th>Purpose</th>
+                    <th>Visit Date</th>
+                    <th>Status</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    // Group the incoming model by GroupId
+                    var groupedRequests = Model.GroupBy(v => v.GroupId);
+                }
+
+                @foreach (var group in groupedRequests)
+                {
+                    var lead = group.First();
+                    var isBulk = group.Count() > 1;
+
+                    <tr class="@(isBulk ? "table-light" : "")">
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark">
+                                @if (isBulk)
+                                {<i class="bi bi-people-fill text-primary me-1"></i>}
+                                @lead.Name
+                                @if (isBulk)
+                                {<span class="badge bg-soft-primary text-primary border ms-1">+ @(group.Count() - 1) more</span>}
+                            </div>
+                            <div class="text-muted extra-small" style="font-size: 0.75rem;">@lead.Email</div>
+                        </td>
+                        <td><span class="text-secondary">@lead.Department.Name</span></td>
+                        <td class="small">@lead.Purpose</td>
+                        <td class="small">@lead.VisitDate.ToShortDateString()</td>
+                        <td>
+                            <span class="status-badge @(isBulk ? "bg-info text-white" : "badge-pending")">
+                                @(isBulk ? "CSV Group" : "Single")
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            @using (Html.BeginForm("UpdateGroupStatus", "Admin", FormMethod.Post, new { @class = "d-inline" }))
+                            {
+                                @* We pass the GroupId (Guid) instead of a single ID *@
+                                <input type="hidden" name="groupId" value="@group.Key" />
+
+                                <button type="submit" name="status" value="2" class="btn btn-success btn-action me-2" title="Approve All">
+                                    <i class="bi bi-check-all"></i> Approve @(isBulk ? "All" : "")
+                                </button>
+
+                                <button type="submit" name="status" value="3" class="btn btn-danger btn-action" title="Reject All">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Corporate Portal</title>
+
+    @* Google Fonts for a modern, professional feel *@
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --soft-bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-bg);
+            color: var(--text-main);
+        }
+
+        /* Soft Corporate Navbar */
+        .navbar {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--primary-blue) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            margin: 0 5px;
+            transition: color 0.2s ease;
+        }
+
+            .nav-link:hover {
+                color: var(--primary-blue) !important;
+            }
+
+        /* Auth Buttons */
+        .btn-login {
+            color: var(--text-main);
+            font-weight: 500;
+            text-decoration: none;
+            margin-right: 1.5rem;
+        }
+
+        .btn-register {
+            background-color: var(--primary-blue);
+            color: white !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+            .btn-register:hover {
+                opacity: 0.9;
+                box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            }
+
+        .body-content {
+            background: white;
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            min-height: 80vh;
+        }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light sticky-top">
+        <div class="container">
+            @Html.ActionLink("CorporatePortal", "HomeLanding", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse d-sm-inline-flex">
+                @* Main Links *@
+                <ul class="navbar-nav flex-grow-1">
+                    @if (Session["AdminEmail"] != null)
+                    {
+                        <li>@Html.ActionLink("Admin Dashboard", "AdminDashboard", "Admin", null, new { @class = "nav-link" })</li>
+                    }
+                    @if (Session["VisitorID"] != null)
+                    {
+                        <li>@Html.ActionLink("My Dashboard", "MyDashboard", "Visitor", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Visit History", "VisitHistory", "Visitor", null, new { @class = "nav-link" })</li>
+                    }
+                    <li>@Html.ActionLink("Resources", "About", "Home", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Support", "Contact", "Home", null, new { @class = "nav-link" })</li>
+                </ul>
+
+                @* Authentication Links *@
+                @* Authentication Links *@
+                <div class="d-flex align-items-center">
+                    @if (Session["AdminEmail"] != null || Session["VisitorID"] != null)
+                    {
+                        @* Show Sign Out if logged in *@
+                        <a href="@Url.Action("HomeLanding", "Home")" class="btn-login text-danger">
+                            <i class="bi bi-box-arrow-right me-1"></i> Sign Out
+                        </a>
+                    }
+                    else
+                    {
+                        @* Show Login/Register if guest *@
+                        @Html.ActionLink("Sign in", "Index", "Home", null, new { @class = "btn-login" })
+                        @Html.ActionLink("Get Started", "Visitor_Registeration", "Visitor", null, new { @class = "btn-register" })
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main role="main" class="body-content">
+            @RenderBody()
+        </main>
+
+        <footer class="text-center pb-4">
+            <p>&copy; @DateTime.Now.Year - Professional Services Inc. &bull; <a href="#" class="text-decoration-none text-muted">Privacy</a></p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,239 @@
+﻿@{
+    ViewBag.Title = "Contact Support";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --primary-blue: #2563eb;
+        --soft-bg: #f8fafc;
+        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Animation utility */
+    .reveal {
+        opacity: 0;
+    }
+
+    .contact-hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        margin-bottom: 3rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Information Card Styling */
+    .info-item {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+        .info-item:hover {
+            transform: translateX(10px);
+            border-color: var(--primary-blue);
+            box-shadow: var(--card-shadow);
+        }
+
+    .info-icon {
+        width: 45px;
+        height: 45px;
+        background: #eff6ff;
+        color: var(--primary-blue);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-right: 1.25rem;
+    }
+
+    /* Form Container */
+    .contact-form-card {
+        background: white;
+        border-radius: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+
+    /* Input Group Remake (Consistent with Registration) */
+    .input-group {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px !important;
+        transition: all 0.2s;
+        background: white;
+    }
+
+        .input-group:focus-within {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+    .input-group-text {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        padding-left: 1rem;
+    }
+
+    .form-control {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0.8rem 1rem 0.8rem 0;
+    }
+
+    .form-label {
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    /* Secondary Action Card */
+    .action-card {
+        background: #0f172a;
+        color: white;
+        border-radius: 20px;
+        border: none;
+    }
+</style>
+
+<div class="container py-5">
+
+    <div class="contact-hero text-center animate__animated animate__fadeInDown">
+        <h1 class="fw-bold text-dark mb-3">Get in Touch</h1>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+            Have questions about the Visitor Management System? Our technical support team is here to help you optimize your facility's security.
+        </p>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-5 animate__animated animate__fadeInLeft">
+            <h4 class="fw-bold mb-4">Contact Details</h4>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="bi bi-building"></i></div>
+                <div>
+                    <div class="small text-muted">Organization</div>
+                    <div class="fw-bold">VMS Global Solutions</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="bi bi-envelope-at"></i></div>
+                <div>
+                    <div class="small text-muted">Technical Support</div>
+                    <div class="fw-bold">support@vms.com</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="bi bi-telephone"></i></div>
+                <div>
+                    <div class="small text-muted">Phone Line</div>
+                    <div class="fw-bold">+91 98765 43210</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="bi bi-geo-alt"></i></div>
+                <div>
+                    <div class="small text-muted">Location</div>
+                    <div class="fw-bold">Office Campus, Bengaluru, India</div>
+                </div>
+            </div>
+
+            <div class="card action-card p-4 mt-5 animate__animated animate__zoomIn animate__delay-1s">
+                <h5 class="fw-bold mb-2">Check In Portal</h5>
+                <p class="small opacity-75">Ready to register a guest? Access the entry dashboard directly.</p>
+                <a href="@Url.Action("CheckInOut", "Visitor")" class="btn btn-outline-light border-0 bg-white text-dark fw-bold mt-2 py-2">
+                    Open Portal <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-7 animate__animated animate__fadeInRight">
+            <div class="contact-form-card p-4 p-md-5">
+                <h4 class="fw-bold mb-4">Send us a Message</h4>
+
+                <form id="contactForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" placeholder="name@company.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Subject</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
+                            <input type="text" class="form-control" placeholder="How can we help?">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Message</label>
+                        <div class="input-group align-items-start">
+                            <span class="input-group-text mt-2"><i class="bi bi-chat-left-dots"></i></span>
+                            <textarea class="form-control" rows="5" placeholder="Type your message here..."></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-submit w-100 text-white mt-2">
+                        <i class="bi bi-send me-2"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Subtle interactivity
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('.btn-submit');
+        const originalText = btn.innerHTML;
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Sending...';
+        btn.disabled = true;
+
+        // Simulate success
+        setTimeout(() => {
+            btn.classList.replace('btn-primary', 'btn-success');
+            btn.innerHTML = '<i class="bi bi-check-lg me-2"></i> Message Sent!';
+            e.target.reset();
+        }, 1500);
+    });
+</script>

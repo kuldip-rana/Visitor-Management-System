@@ -1,0 +1,262 @@
+﻿@model registar.Models.Visitor
+
+@{
+    ViewBag.Title = "Visitor Entry";
+}
+@if (!Html.ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger border-0 rounded-4 p-3 mb-4 d-flex align-items-center" role="alert" style="background-color: #fef2f2; color: #991b1b;">
+        <i class="bi bi-exclamation-octagon-fill me-3 fs-4"></i>
+        <div>
+            <h6 class="fw-bold mb-0">Registration Error</h6>
+            <p class="small mb-0">@Html.ValidationSummary(true, "", new { @class = "list-unstyled" })</p>
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "small fw-semibold" })
+        </div>
+    </div>
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    /* Modern Unified Input Design */
+    .input-group {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        overflow: hidden;
+    }
+
+        /* Seamless field appearance */
+        .input-group .input-group-text,
+        .input-group .form-control,
+        .input-group .form-select {
+            border: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            height: 3.2rem;
+        }
+
+    .input-group-text {
+        color: #94a3b8;
+        padding-left: 1.25rem;
+        padding-right: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control::placeholder {
+        color: #cbd5e1;
+    }
+
+    /* Focus State */
+    .input-group:focus-within {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+    }
+
+    /* Typography & Labels */
+    .form-label {
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #475569;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+    }
+
+    /* Container Card */
+    .registration-card {
+        background: #ffffff;
+        border-radius: 24px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Premium Button Action */
+    .btn-submit {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            filter: brightness(1.1);
+            color: white;
+        }
+
+    .nav-pills .nav-link {
+        border-radius: 10px;
+        color: #64748b;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+    }
+
+        .nav-pills .nav-link.active {
+            background-color: #f1f5f9;
+            color: #2563eb;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="registration-card p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <h3 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Industry Visitor Entry</h3>
+                    <p class="text-muted small">Submit your details for security approval</p>
+                </div>
+
+                <ul class="nav nav-pills mb-4 justify-content-center bg-light p-1 rounded-3" id="visitTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="single-tab" data-bs-toggle="pill" data-bs-target="#single" type="button" role="tab">Single Visitor</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="group-tab" data-bs-toggle="pill" data-bs-target="#group" type="button" role="tab">Multiple (CSV)</button>
+                    </li>
+                </ul>
+
+                @using (Html.BeginForm("Visitor_Registeration", "Visitor", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email Address (Lead)</label>
+                            <div class="input-group @(!string.IsNullOrEmpty(Model?.Email) ? "bg-light" : "")">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                @if (!string.IsNullOrEmpty(Model?.Email))
+                                {
+                                    @* Case: Existing Visitor - Readonly field *@
+                                    @Html.TextBoxFor(m => m.Email, new
+                                    {
+                                        @class = "form-control text-muted",
+                                        @readonly = "readonly",
+                                        style = "cursor: not-allowed; background-color: #f8fafc !important;"
+                                    })
+                                }
+                                else
+                                {
+                                    @* Case: New Registration - Editable field *@
+                                    @Html.TextBoxFor(m => m.Email, new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "name@company.com",
+                                        required = "required",
+                                        type = "email"
+                                    })
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model?.Email))
+                            {
+                                <small class="text-primary fw-semibold"><i class="bi bi-info-circle me-1"></i> Logged in account</small>
+                            }
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Target Department</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                @Html.DropDownList("DepartmentId", null, "Select Department", new { @class = "form-select", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Visit Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                @Html.TextBoxFor(m => m.VisitDate, new { @class = "form-control", type = "date", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Purpose</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-chat-dots"></i></span>
+                                @Html.TextBoxFor(m => m.Purpose, new { @class = "form-control", placeholder = "e.g. Maintenance" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="visitTabContent">
+                        <div class="tab-pane fade show active" id="single" role="tabpanel">
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Visitor's full name", id = "singleName" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mobile Number</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Contact Number" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="group" role="tabpanel">
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0">Upload Visitor List (CSV)</label>
+                                    <a href="javascript:void(0)" onclick="downloadFormat()" class="text-decoration-none small fw-bold text-primary">
+                                        <i class="bi bi-file-earmark-spreadsheet me-1"></i>Download CSV Format
+                                    </a>
+                                </div>
+                                <div class="bg-light p-4 rounded-4 border border-dashed text-center">
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-1"></i>
+                                    <input type="file" name="csvFile" class="form-control mt-2" accept=".csv" id="csvFile" />
+                                    <p class="text-muted small mt-2">Please use the provided format for successful upload.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3">
+                        <button type="submit" class="btn btn-primary btn-submit w-100 shadow-sm">
+                            <i class="bi bi-shield-lock me-2"></i> Send Verification OTP
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <p class="text-center mt-4 text-muted small">
+                &copy; @DateTime.Now.Year Secure Visitor System. Industrial Access Control.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple logic to handle required fields based on tab
+    document.getElementById('group-tab').addEventListener('click', function () {
+        document.getElementById('singleName').removeAttribute('required');
+    });
+    document.getElementById('single-tab').addEventListener('click', function () {
+        document.getElementById('singleName').setAttribute('required', 'required');
+    });
+
+    function downloadFormat() {
+        // Defines the headers as seen in your image
+        const headers = "Name,contact no";
+        const blob = new Blob([headers], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+
+        // Create a temporary link to trigger the download
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "Visitor_Upload_Format.csv");
+        link.style.visibility = 'hidden';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>

@@ -1,0 +1,114 @@
+﻿@model string
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Email Verification | Secure Access</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .registration-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.03);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .input-group {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px !important;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+            .input-group:focus-within {
+                border-color: #2563eb !important;
+                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+            }
+
+        .input-group-text, .form-control {
+            border: none !important;
+            background-color: transparent !important;
+            height: 3.5rem;
+        }
+
+        .otp-input {
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s;
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px rgba(37, 99, 235, 0.2);
+            }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+
+    <div class="registration-card p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="bg-primary bg-opacity-10 text-primary d-inline-flex p-3 rounded-circle mb-3">
+                <i class="bi bi-shield-check fs-3"></i>
+            </div>
+            <h4 class="fw-bold">Security Verification</h4>
+            <p class="text-muted small">Enter the 6-digit code sent to<br><strong>@ViewBag.Email</strong></p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger border-0 small rounded-3 mb-4">
+                <i class="bi bi-exclamation-triangle me-2"></i> @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("VerifyOtp", "Visitor", FormMethod.Post))
+        {
+            <input type="hidden" name="email" value="@ViewBag.Email" />
+
+            <div class="mb-4">
+                <label class="form-label fw-bold text-uppercase small text-secondary" style="font-size: 0.7rem; letter-spacing: 0.05em;">OTP Code</label>
+                <div class="input-group">
+                    <span class="input-group-text text-primary"><i class="bi bi-key-fill"></i></span>
+                    <input type="text" name="otp" class="form-control otp-input" maxlength="6" placeholder="000000" required autofocus />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-submit w-100 mb-3">
+                Verify Identity
+            </button>
+
+            <div class="text-center">
+                <a href="@Url.Action("Visitor_Registeration")" class="text-decoration-none small text-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to start
+                </a>
+            </div>
+        }
+    </div>
+
+</body>
+</html>
