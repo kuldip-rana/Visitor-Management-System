@@ -1,11 +1,5 @@
 Step 1: Create/Update the File
-In your project folder, create a new file named README.md.
 
-Open it with Notepad or VS Code.
-
-Paste the following content exactly:
-
-Markdown
 # Visitor Management System 🏢
 
 A .NET-based web application for managing and tracking visitors, featuring OTP verification, automated pass generation, and an administrative dashboard.
