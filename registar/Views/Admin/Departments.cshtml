@@ -1,0 +1,134 @@
+﻿@model IEnumerable<registar.Models.Department>
+
+@{
+    ViewBag.Title = "Department Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 mb-4 shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark mb-0">Department Management</h3>
+        <a href="@Url.Action("AdminDashboard", "Admin")" class="btn btn-outline-secondary shadow-sm rounded-3">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    @* Add New Department Card *@
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            @using (Html.BeginForm("CreateDepartment", "Admin", FormMethod.Post, new { @class = "row g-3 align-items-center" }))
+            {
+                <div class="col-md-8">
+                    <label class="form-label fw-bold small text-uppercase">New Department Name</label>
+                    <input type="text" name="name" class="form-control form-control-lg bg-light border-0" placeholder="e.g. IT, HR, Quality Control" required />
+                </div>
+                <div class="col-md-4 mt-md-5">
+                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Add Department
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* Departments List Card *@
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white py-3 border-0">
+            <h5 class="fw-bold mb-0">Registered Departments & Analytics</h5>
+        </div>
+        <div class="table-responsive px-4 pb-4">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Department Name</th>
+                        <th class="text-center">Total Visitors Received</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dept in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@dept.Name</td>
+                            <td class="text-center">
+                                <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill">
+                                    <i class="bi bi-people-fill me-1"></i> @dept.Visitors.Count visitors
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @if (dept.IsActive == true)
+                                {
+                                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">
+                                        <i class="bi bi-eye-slash-fill me-1"></i> Hidden
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+
+                                    @* Toggle Visibility Action *@
+                                    @using (Html.BeginForm("ToggleDepartmentStatus", "Admin", new { id = dept.Id }, FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary border-0" title="@(dept.IsActive == true ? "Disable" : "Enable")">
+                                            <i class="bi @(dept.IsActive == true ? "bi-eye-slash text-warning" : "bi-eye text-success") fs-5"></i>
+                                        </button>
+                                    }
+
+                                    @* Delete with Math Challenge Action *@
+                                    @using (Html.BeginForm("DeleteDepartment", "Admin", FormMethod.Post, new { id = "deleteForm-" + dept.Id, @class = "d-inline" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@dept.Id" />
+                                        @* These names must match the parameters in the Controller method *@
+                                        <input type="hidden" name="answer" id="userAns-@dept.Id" />
+                                        <input type="hidden" name="expected" id="expectedAns-@dept.Id" />
+
+                                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="confirmWithMath(@dept.Id, '@dept.Name')">
+                                            <i class="bi bi-trash3-fill fs-5"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmWithMath(id, deptName) {
+        // Generate two random numbers between 1 and 10
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        const expectedSum = num1 + num2;
+
+        // Ask the user the arithmetic question
+        const userAnswer = prompt(`Security Check: To delete "${deptName}", please solve this:\n\nWhat is ${num1} + ${num2}?`);
+
+        if (userAnswer !== null) {
+            // Set values in the hidden fields for the Controller to verify
+            document.getElementById(`userAns-${id}`).value = userAnswer;
+            document.getElementById(`expectedAns-${id}`).value = expectedSum;
+
+            // Submit the form
+            document.getElementById(`deleteForm-${id}`).submit();
+        }
+    }
+</script>

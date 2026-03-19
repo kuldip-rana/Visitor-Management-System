@@ -1,0 +1,156 @@
+﻿@model registar.Models.Visitor
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Visitor Pass</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .pass-card {
+            width: 500px;
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #1e293b; /* Deep Corporate Slate */
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h2 {
+                margin: 0;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 20px;
+            }
+
+        .content {
+            padding: 30px;
+            background-color: #f8fafc; /* Soft off-white */
+        }
+
+        .info-group {
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 10px;
+        }
+
+        .label {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .value {
+            display: block;
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .qr-code {
+            width: 130px;
+            height: 130px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background-color: #f1f5f9;
+            padding: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pass-card">
+        <div class="header">
+            <h2>Visitor Gate Pass</h2>
+        </div>
+
+        <div class="content">
+            <div class="info-group">
+                <span class="label">Visitor Name</span>
+                <span class="value">@Model.Name</span>
+            </div>
+
+            <div style="display: table; width: 100%;">
+                <div style="display: table-cell; width: 50%;">
+                    <div class="info-group">
+                        <span class="label">Visit Date</span>
+                        <span class="value">@Model.VisitDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 50%;">
+                    <div class="info-group">
+                        <span class="label">Department</span>
+                        <span class="value">@(Model.Department != null ? Model.Department.Name : "General")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <span class="label">Purpose of Visit</span>
+                <span class="value">@Model.Purpose</span>
+            </div>
+
+            <div class="qr-section">
+                @if (ViewBag.QrCode != null)
+                {
+                    <img src="@ViewBag.QrCode" class="qr-code" alt="QR Verification" />
+                }
+                <div style="display: block;">
+                    <div class="status-badge">AUTHORIZED ACCESS</div>
+                </div>
+                <p style="font-size: 10px; color: #64748b; margin-top: 10px;">
+                    Ref: @Model.GroupId.ToString().ToUpper()
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Generated on @DateTime.Now.ToString("g")<br />
+            Please present a valid ID along with this pass at the security desk.
+        </div>
+    </div>
+
+</body>
+</html>

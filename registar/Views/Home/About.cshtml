@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "About Our System";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --primary-blue: #2563eb;
+        --soft-slate: #f1f5f9;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        padding: 4rem 0 3rem 0;
+        text-align: center;
+        background: radial-gradient(circle at center, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 24px;
+        margin-bottom: 3rem;
+    }
+
+    .hero-badge {
+        background: #dbeafe;
+        color: var(--primary-blue);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Info Cards */
+    .feature-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: var(--primary-blue);
+        }
+
+    .icon-wrapper {
+        width: 48px;
+        height: 48px;
+        background: #eff6ff;
+        color: var(--primary-blue);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .list-item-custom {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: var(--text-muted);
+    }
+
+        .list-item-custom i {
+            color: #10b981; /* Success Green */
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+    .section-title {
+        font-weight: 800;
+        color: var(--text-dark);
+        letter-spacing: -0.025em;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="container py-4">
+
+    <div class="about-hero shadow-sm">
+        <span class="hero-badge mb-3 d-inline-block">Modern Security</span>
+        <h1 class="display-5 fw-bold text-dark mb-3">Visitor Management System</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;">
+            A digital-first solution designed to transform how your organization handles guests,
+            replacing outdated paper logs with a secure, efficient, and professional experience.
+        </p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-12">
+            <div class="feature-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="section-title mb-3">Redefining Workplace Entry</h3>
+                        <p class="text-muted mb-0">
+                            The VMS is a web-based application built for the modern institution. It centralizes
+                            visitor registration, host notifications, and security reporting into a single dashboard.
+                            Whether you are managing a small office or a large campus, our system ensures every
+                            entry is authorized and every exit is recorded.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center d-none d-md-block">
+                        <i class="bi bi-shield-check" style="font-size: 6rem; color: #e2e8f0;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Key Features</h4>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Full Digital Data Capture</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Real-time Check-in/out Tracking</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Automatic Host Notifications</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Comprehensive History & Reporting</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Responsive Mobile Interface</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Strategic Benefits</h4>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Enhanced Corporate Security</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Paperless Office Compliance</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Rapid Visitor Processing</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Organized, Audit-Ready Records</div>
+                <div class="list-item-custom"><i class="bi bi-check-circle-fill"></i> Professional First Impression</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center py-4 border-top">
+        <p class="text-muted">Ready to upgrade your front desk?</p>
+        <a href="@Url.Action("Visitor_Registeration","Visitor")" class="btn btn-primary btn-lg px-5 shadow-sm" style="border-radius: 12px; font-weight: 600;">
+            Try the Registration Form
+        </a>
+    </div>
+</div>

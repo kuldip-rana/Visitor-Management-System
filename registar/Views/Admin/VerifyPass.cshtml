@@ -1,0 +1,109 @@
+﻿@model registar.Models.Visitor
+@{
+    Layout = null; // Keep it clean for mobile screens
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Verification</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .v-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .status-header {
+            padding: 30px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .valid {
+            background: #10b981;
+        }
+        /* Green */
+        .invalid {
+            background: #ef4444;
+        }
+        /* Red */
+        .details {
+            padding: 20px;
+        }
+
+        .row {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .value {
+            font-size: 18px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="v-card">
+        @if (Model != null && Model.Status == 2) // 2 = Approved
+        {
+            <div class="status-header valid">✓ ACCESS GRANTED</div>
+        }
+        else
+        {
+            <div class="status-header invalid">✕ ACCESS DENIED</div>
+        }
+
+        <div class="details">
+            <div class="row">
+                <div class="label">Visitor Name</div>
+                <div class="value">@(Model?.Name ?? "N/A")</div>
+            </div>
+            <div class="row">
+                <div class="label">Visit Date</div>
+                <div class="value">@(Model?.VisitDate.ToString("dd MMM yyyy") ?? "N/A")</div>
+            </div>
+            <div class="row">
+                <div class="label">Department</div>
+                <div class="value">@(Model?.Department?.Name ?? "General")</div>
+            </div>
+            <div class="row">
+                <div class="label">Current Status</div>
+                <div class="value">
+                    @if (Model?.Status == 2)
+                    {<span>Approved</span> }
+                    else if (Model?.Status == 3)
+                    { <span>Rejected</span> }
+                    else
+                    { <span>Pending/Expired</span>}
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; padding-bottom:20px; color:#94a3b8; font-size:12px;">
+            VMS Security System Verified
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<registar.Models.Visitor>
+
+@{
+    ViewBag.Title = "Visit History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-0">Visit History</h3>
+            <p class="text-muted small mb-0">Reviewing all processed approval and rejection records</p>
+        </div>
+        <a href="@Url.Action("AdminDashboard", "Admin")" class="btn btn-outline-secondary shadow-sm rounded-3">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+            <h5 class="fw-bold mb-0 text-dark">Total Records processed</h5>
+            <span class="badge bg-primary px-3 py-2 rounded-pill">Total: @Model.Count()</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Visitor Name</th>
+                            <th>Email</th>
+                            <th>Visit Date</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Processed On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.VisitDate.ToShortDateString()</td>
+                                <td>@item.DepartmentId</td>
+                                <td>
+                                    @if (item.Status == 2)
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Approved
+                                        </span>
+                                    }
+                                    else if (item.Status == 3)
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2">
+                                            <i class="bi bi-x-circle-fill me-1"></i> Rejected
+                                        </span>
+                                    }
+                                </td>
+                                <td class="small text-muted">@item.RegisteredAt</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

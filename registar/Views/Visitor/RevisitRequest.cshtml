@@ -1,0 +1,42 @@
+﻿@model registar.Models.Visitor
+
+<div class="container py-5">
+    <div class="admin-card p-4">
+        <h2 class="fw-bold"><i class="bi bi-lightning-charge-fill text-warning"></i> Express Visit Request</h2>
+        <p class="text-muted">Welcome back, @Model.Name. Your profile is verified.</p>
+        <hr />
+
+        @using (Html.BeginForm("SubmitRevisit", "Visitor", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Visitor Name</label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control bg-light", @readonly = "readonly" })
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Email Address</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light", @readonly = "readonly" })
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Department to Visit</label>
+                    @* We cast the ViewBag item to SelectList explicitly *@
+                    @Html.DropDownListFor(m => m.DepartmentId, (SelectList)ViewBag.DepartmentId, "-- Select --", new { @class = "form-select", required = "required" })
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Visit Date</label>
+                    <input type="date" name="VisitDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">Purpose of Visit</label>
+                    @Html.TextAreaFor(m => m.Purpose, new { @class = "form-control", rows = "3", required = "required", placeholder = "Meetings, Delivery, etc." })
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                <i class="bi bi-send-fill me-2"></i>Submit Visit Request
+            </button>
+        }
+    </div>
+</div>

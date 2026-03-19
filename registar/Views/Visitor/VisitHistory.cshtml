@@ -1,0 +1,92 @@
+﻿@model IEnumerable<registar.Models.Visitor>
+@{
+    ViewBag.Title = "Visit History";
+}
+
+<div class="container py-5">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0">📜 Your Visit History</h4>
+            <a href="@Url.Action("CheckInOut", "Visitor")" class="btn btn-primary btn-sm rounded-pill px-3">
+                <i class="bi bi-clock-history"></i> Check In/Out
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small text-uppercase fw-bold">
+                    <tr>
+                        <th class="ps-4">Date</th>
+                        <th>Details</th>
+                        <th>Timings</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-medium">@item.VisitDate.ToShortDateString()</div>
+                                <div class="text-muted smallest" style="font-size: 0.75rem;">ID: #@item.Id</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">@item.Name</div>
+                                <div class="text-muted small">@item.Purpose</div>
+                            </td>
+                            <td>
+                                @{
+                                    // Logic to find the specific log for this visit date/entry
+                                    // If your Visitor model has a Logs collection:
+                                    var log = item.VisitorLogs?.OrderByDescending(l => l.CheckInTime).FirstOrDefault();
+                                }
+                                @if (log != null)
+                                {
+                                    <div class="text-success small"><i class="bi bi-box-arrow-in-right"></i> @(log.CheckInTime?.ToString("hh:mm tt") ?? "--")</div>
+                                    <div class="text-danger small"><i class="bi bi-box-arrow-left"></i> @(log.CheckOutTime?.ToString("hh:mm tt") ?? "Still In")</div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small italic">No log recorded</span>
+                                }
+                            </td>
+                            <td><span class="badge bg-light text-secondary border fw-normal">@item.Department.Name</span></td>
+                            <td>
+                                @switch (item.Status)
+                                {
+                                    case 0:<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 rounded-pill">Pending</span>; break;
+                                    case 1: <span class="badge bg-success-subtle text-success border border-success-subtle px-3 rounded-pill">Approved</span>; break;
+                                    case 2: <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 rounded-pill">Rejected</span>; break;
+                                    case 3: <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 rounded-pill">Completed</span>; break;
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                @if (item.Status == 1 && !string.IsNullOrEmpty(item.IdPassPath))
+                                {
+                                    <a href="@Url.Content(item.IdPassPath)" target="_blank" class="btn btn-sm btn-outline-success rounded-pill me-1">
+                                        <i class="bi bi-file-earmark-pdf"></i> Pass
+                                    </a>
+                                }
+                                <button class="btn btn-sm btn-light border rounded-pill" onclick="showDetails(@item.Id)">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .smallest {
+        font-size: 0.75rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: 0.2s;
+    }
+</style>

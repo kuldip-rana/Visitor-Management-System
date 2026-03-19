@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Visitor Check In / Out";
+    // Casting here prevents the "null to bool" error and keeps the code clean below
+    bool canCheckOut = ViewBag.CanCheckOut as bool? ?? false;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Visitor Check In / Check Out</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("CheckInOut", "Visitor", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="text-center mb-4">
+                            <span class="badge @(canCheckOut ? "bg-success" : "bg-secondary") p-2 px-4" style="font-size: 1.1rem;">
+                                Current Status: @ViewBag.CurrentStatus
+                            </span>
+
+                            @if (canCheckOut)
+                            {
+                                <div class="mt-2">
+                                    <p class="text-muted small mb-0">Checked in at: <strong>@ViewBag.CheckInTime</strong></p>
+                                    <p class="text-danger small">Auto-checkout in @ViewBag.MinutesRemaining minutes.</p>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Visitor Details</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">ID: @ViewBag.VisitorId</span>
+                                <input type="text" class="form-control bg-light" value="@ViewBag.VisitorName" readonly />
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        if (!canCheckOut)
+                        {
+                            <input type="hidden" name="actionType" value="In" />
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Check-In Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="2" placeholder="Purpose of visit..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-box-arrow-in-right"></i> Confirm Check-In
+                            </button>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="actionType" value="Out" />
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Check-Out Remarks (Optional)</label>
+                                <textarea name="remarks" class="form-control" rows="2" placeholder="Notes before leaving..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger w-100 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-box-arrow-left"></i> Manual Check-Out Now
+                            </button>
+                        }
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("MyDashboard", "Visitor")" class="text-decoration-none text-muted small">
+                                <i class="bi bi-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --primary-blue: #2563eb;
+        --dark-slate: #0f172a;
+        --soft-gray: #f8fafc;
+    }
+
+    /* Hero Section Enhancement */
+    .vms-hero {
+        padding: 5rem 0 4rem 0;
+        background: radial-gradient(circle at top right, #eff6ff 0%, #ffffff 40%);
+    }
+
+        .vms-hero h1 {
+            font-weight: 800;
+            color: var(--dark-slate);
+            letter-spacing: -1.5px;
+            font-size: 3rem;
+        }
+
+    /* Action Card Styling */
+    .action-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        background: #ffffff;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            border-color: var(--primary-blue);
+        }
+
+    .card-icon-container {
+        width: 64px;
+        height: 64px;
+        background: #eff6ff;
+        color: var(--primary-blue);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-card:hover .card-icon-container {
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    .action-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .btn-action {
+        background: #f1f5f9;
+        color: var(--dark-slate);
+        border: none;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .action-card:hover .btn-action {
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    /* Decorative element */
+    .dot-pattern {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 0.1;
+        font-size: 2rem;
+    }
+</style>
+
+<div class="vms-hero animate__animated animate__fadeIn">
+    <div class="container text-center">
+        <span class="badge rounded-pill px-3 py-2 mb-3" style="background: #dbeafe; color: #1e40af; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Secure Operations</span>
+        <h1>Visitor Management System</h1>
+        <p class="text-muted fs-5 mx-auto" style="max-width: 600px;">
+            A streamlined, digital-first solution to monitor workplace access and enhance organizational security.
+        </p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-1s">
+            <a href="@Url.Action("Visitor_Registeration", "Visitor")" class="action-link">
+                <div class="action-card p-5">
+                    <div class="dot-pattern"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                    <div class="card-icon-container">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3 text-dark">Registration</h4>
+                    <p class="text-muted mb-4 small">Capture new visitor credentials and visit details in our secure digital log.</p>
+                    <div class="btn-action">
+                        Begin Entry <i class="bi bi-arrow-right-short ms-2"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-2s">
+            <a href="@Url.Action("CheckInOut", "Visitor")" class="action-link">
+                <div class="action-card p-5 border-primary" style="border-width: 2px;">
+                    <div class="dot-pattern"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                    <div class="card-icon-container" style="background: var(--primary-blue); color: white;">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3 text-dark">Check In/Out</h4>
+                    <p class="text-muted mb-4 small">Electronically record arrival and departure times for verified visitors.</p>
+                    <div class="btn-action" style="background: var(--primary-blue); color: white;">
+                        Open Portal <i class="bi bi-arrow-right-short ms-2"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-3s">
+            <a href="@Url.Action("AdminDashboard", "Admin")" class="action-link">
+                <div class="action-card p-5">
+                    <div class="dot-pattern"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+                    <div class="card-icon-container">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3 text-dark">Analytics</h4>
+                    <p class="text-muted mb-4 small">Access high-level reporting, visitor logs, and system administrative tools.</p>
+                    <div class="btn-action">
+                        View Admin <i class="bi bi-arrow-right-short ms-2"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5 pt-5 animate__animated animate__fadeIn">
+        <hr class="w-25 mx-auto opacity-10">
+        <p class="text-muted small">Need technical assistance? Visit our <a href="@Url.Action("Contact", "Home")" class="text-primary text-decoration-none fw-bold">Support Center</a></p>
+    </div>
+</div>

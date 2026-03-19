@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Verify OTP";
+    var email = ViewBag.Email ?? TempData["TargetEmail"];
+}
+
+<style>
+    :root {
+        --corp-blue: #2c3e50;
+        --corp-accent: #3b82f6;
+    }
+
+    .otp-card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        max-width: 450px;
+        margin: 50px auto; /* Centers the card on the page */
+        padding: 2rem;
+    }
+
+    /* Updated centering logic for the input */
+    .otp-input-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers children horizontally */
+        width: 100%;
+    }
+
+    .otp-input {
+        letter-spacing: 12px;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+        border: 2px solid #e2e8f0;
+        padding: 10px 0 10px 12px; /* Extra left padding to offset letter-spacing */
+        width: 100%;
+        max-width: 280px; /* Constrains width to look like a code box */
+        display: block;
+        margin: 0 auto; /* Centers the box itself */
+        border-radius: 8px;
+    }
+
+        .otp-input:focus {
+            border-color: var(--corp-accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="otp-card p-4 p-md-5 mt-5">
+        <div class="text-center mb-4">
+            <div class="display-6 text-primary mb-2">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <h3 class="fw-bold">Verify Your Email</h3>
+            <p class="text-muted small">We've sent a 6-digit code to <br /><strong>@email</strong></p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger border-0 small mb-4">
+                <i class="bi bi-exclamation-circle me-2"></i> @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("VerifyLogin", "Home", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @* Pass the email hidden so VerifyLogin knows who is verifying *@
+            <input type="hidden" name="email" value="@email" />
+
+            <div class="mb-4">
+                <label class="form-label d-block text-center">Enter 6-Digit Code</label>
+                <input type="text" name="otp" id="otpInput"
+                       class="form-control otp-input"
+                       placeholder="000000"
+                       maxlength="6"
+                       required
+                       autocomplete="one-time-code" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                Verify & Continue
+            </button>
+        }
+
+        <div class="text-center mt-4">
+            <p class="small text-muted mb-1">Didn't receive the code?</p>
+            <a href="@Url.Action("Index", "Home")" class="text-decoration-none small fw-bold">Try another email</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ensure only numbers are entered
+    document.getElementById('otpInput').addEventListener('input', function (e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>

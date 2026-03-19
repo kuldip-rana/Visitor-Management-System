@@ -1,0 +1,132 @@
+﻿@model registar.Models.Visitor
+@{
+    ViewBag.Title = "Visitor Dashboard";
+    var allVisits = ViewBag.AllVisits as List<registar.Models.Visitor> ?? new List<registar.Models.Visitor>();
+    var upcomingVisits = allVisits.Where(v => v.VisitDate >= DateTime.Today && v.Status != 3).ToList();
+    var visitHistory = allVisits.Where(v => v.VisitDate < DateTime.Today || v.Status == 3).ToList();
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Welcome back, @Model.Name!</h2>
+            <p class="text-muted">Manage your campus access and visit history.</p>
+        </div>
+        <a href="@Url.Action("RevisitRequest", "Visitor")" class="btn btn-primary px-4 py-2 shadow-sm">
+            <i class="bi bi-lightning-charge-fill me-2"></i> Quick Re-visit
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Current Request Status</h5>
+                    <div class="d-flex align-items-center p-3 rounded-3 @(Model.Status == 2 ? "bg-success-subtle" : Model.Status == 3 ? "bg-danger-subtle" : "bg-warning-subtle")">
+                        <div class="me-3">
+                            @if (Model.Status == 2)
+                            {<i class="bi bi-check-circle-fill text-success fs-2"></i> }
+                            else if (Model.Status == 3)
+                            { <i class="bi bi-x-circle-fill text-danger fs-2"></i> }
+                            else
+                            { <i class="bi bi-clock-history text-warning fs-2"></i>}
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-semibold text-dark">
+                                @(Model.Status == 2 ? "Approved" : Model.Status == 3 ? "Rejected" : "Pending Approval")
+                            </p>
+                            <small class="text-muted">Request for @Model.VisitDate.ToShortDateString() - @Model.Purpose</small>
+                        </div>
+                        @if (Model.Status == 2 && !string.IsNullOrEmpty(Model.IdPassPath))
+                        {
+                            <a href="@Url.Content(Model.IdPassPath)" target="_blank" class="btn btn-success btn-sm ms-auto px-3">
+                                <i class="bi bi-download me-1"></i> Get Pass
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">📅 Upcoming Visits</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Purpose</th>
+                                    <th>Status</th>
+                                    <th>Dept</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var visit in upcomingVisits)
+                                {
+                                    <tr>
+                                        <td>@visit.VisitDate.ToShortDateString()</td>
+                                        <td>@visit.Purpose</td>
+                                        <td>
+                                            <span class="badge @(visit.Status == 2 ? "bg-success" : "bg-warning text-dark") rounded-pill">
+                                                @(visit.Status == 2 ? "Approved" : "Pending")
+                                            </span>
+                                        </td>
+                                        <td>@visit.Department.Name</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">📜 Visit History</h5>
+                    <div class="list-group list-group-flush">
+                        @foreach (var history in visitHistory.Take(5))
+                        {
+                            <div class="list-group-item px-0 py-3 border-0 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="mb-0 fw-medium text-dark">@history.Purpose</p>
+                                        <small class="text-muted">@history.VisitDate.ToShortDateString()</small>
+                                    </div>
+                                    <span class="small @(history.Status == 2 ? "text-success" : "text-danger")">
+                                        @(history.Status == 2 ? "Completed" : "Rejected")
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-success-subtle {
+        background-color: #e1f7e3;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff4e0;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fceaea;
+    }
+
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    }
+</style>
