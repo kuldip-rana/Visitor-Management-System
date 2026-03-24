@@ -48,12 +48,14 @@ namespace registar.Controllers
 
             int visitorId = (int)Session["VisitorID"];
 
-            var history = db.VisitorLogs
-                .Where(l => l.VisitorId == visitorId)
-                .OrderByDescending(l => l.CheckInTime)
+            // Fetch the Visitor records (which match your @model IEnumerable<registar.Models.Visitor>)
+            var history = db.Visitors
+                .Where(v => v.Id == visitorId) // Or whatever links the current user to their visits
+                .OrderByDescending(v => v.VisitDate)
                 .ToList();
 
-            return View(history);
+            // Ensure we return an empty list instead of null to avoid "Object reference" errors
+            return View(history ?? new List<registar.Models.Visitor>());
         }
 
         //=================

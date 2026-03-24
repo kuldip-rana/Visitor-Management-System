@@ -11,9 +11,10 @@
         --primary-blue: #2563eb;
         --dark-slate: #0f172a;
         --soft-gray: #f8fafc;
+        --card-border: #e2e8f0;
     }
 
-    /* Hero Section Enhancement */
+    /* Hero Section */
     .vms-hero {
         padding: 5rem 0 4rem 0;
         background: radial-gradient(circle at top right, #eff6ff 0%, #ffffff 40%);
@@ -26,22 +27,35 @@
             font-size: 3rem;
         }
 
-    /* Action Card Styling */
+    /* --- New Smooth Transition Logic --- */
+
+    /* 1. Slight dimming of all cards when the user hovers the container */
+    .cards-container:hover .action-card {
+        opacity: 0.7;
+        filter: grayscale(0.2);
+    }
+
+    /* 2. Base Card Styling */
     .action-card {
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--card-border);
         border-radius: 24px;
         background: #ffffff;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Using a longer, smoother cubic-bezier for that "fade" feel */
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
         height: 100%;
     }
 
-        .action-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-            border-color: var(--primary-blue);
-        }
+    /* 3. The Hover State (The Blue "Focus" Effect) */
+    .col-md-4:hover .action-card {
+        opacity: 1 !important;
+        filter: grayscale(0) !important;
+        transform: translateY(-12px);
+        box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 10px 10px -5px rgba(37, 99, 235, 0.04);
+        border-color: var(--primary-blue);
+        border-width: 2px;
+    }
 
     .card-icon-container {
         width: 64px;
@@ -54,10 +68,31 @@
         justify-content: center;
         font-size: 1.75rem;
         margin-bottom: 1.5rem;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
     }
 
-    .action-card:hover .card-icon-container {
+    /* Icon color shift on hover */
+    .col-md-4:hover .card-icon-container {
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    .btn-action {
+        background: #f1f5f9;
+        color: var(--dark-slate);
+        border: none;
+        font-weight: 700;
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        transition: all 0.4s ease;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Button color shift on hover */
+    .col-md-4:hover .btn-action {
         background: var(--primary-blue);
         color: white;
     }
@@ -67,26 +102,6 @@
         color: inherit;
     }
 
-    .btn-action {
-        background: #f1f5f9;
-        color: var(--dark-slate);
-        border: none;
-        font-weight: 600;
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        transition: all 0.2s;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .action-card:hover .btn-action {
-        background: var(--primary-blue);
-        color: white;
-    }
-
-    /* Decorative element */
     .dot-pattern {
         position: absolute;
         top: 10px;
@@ -107,10 +122,10 @@
 </div>
 
 <div class="container pb-5">
-    <div class="row g-4 justify-content-center">
+    <div class="row g-4 justify-content-center cards-container">
 
         <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-1s">
-            <a href="@Url.Action("Visitor_Registeration", "Visitor")" class="action-link">
+            <a href="@Url.Action("Visitor_Registration", "Home")" class="action-link">
                 <div class="action-card p-5">
                     <div class="dot-pattern"><i class="bi bi-grid-3x3-gap-fill"></i></div>
                     <div class="card-icon-container">
@@ -127,14 +142,14 @@
 
         <div class="col-md-4 animate__animated animate__fadeInUp animate__delay-2s">
             <a href="@Url.Action("CheckInOut", "Visitor")" class="action-link">
-                <div class="action-card p-5 border-primary" style="border-width: 2px;">
+                <div class="action-card p-5">
                     <div class="dot-pattern"><i class="bi bi-grid-3x3-gap-fill"></i></div>
-                    <div class="card-icon-container" style="background: var(--primary-blue); color: white;">
+                    <div class="card-icon-container">
                         <i class="bi bi-arrow-left-right"></i>
                     </div>
                     <h4 class="fw-bold mb-3 text-dark">Check In/Out</h4>
                     <p class="text-muted mb-4 small">Electronically record arrival and departure times for verified visitors.</p>
-                    <div class="btn-action" style="background: var(--primary-blue); color: white;">
+                    <div class="btn-action">
                         Open Portal <i class="bi bi-arrow-right-short ms-2"></i>
                     </div>
                 </div>

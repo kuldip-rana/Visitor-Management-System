@@ -294,7 +294,6 @@ namespace registar.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteUserByEmail(string email)
         {
-            // 1. Session Security Check
             if (Session["AdminEmail"] == null) return RedirectToAction("Index", "Home");
 
             if (string.IsNullOrEmpty(email))
@@ -305,16 +304,35 @@ namespace registar.Controllers
 
             try
             {
-                // 2. Find all visitor records associated with this email
+                // 1. Find all visitor profile records for this email
                 var userRecords = db.Visitors.Where(v => v.Email == email).ToList();
 
                 if (userRecords.Any())
                 {
-                    // 3. Remove all records (RemoveRange is faster for multiple rows)
+                    // Get a list of all Visitor IDs associated with this email
+                    var visitorIds = userRecords.Select(v => v.Id).ToList();
+
+                    // 2. DELETE CHILD RECORDS FIRST (VisitorLogs)
+                    var associatedLogs = db.VisitorLogs.Where(l => visitorIds.Contains((int)l.VisitorId)).ToList();
+                    if (associatedLogs.Any())
+                    {
+                        db.VisitorLogs.RemoveRange(associatedLogs);
+                    }
+
+                    // 3. DELETE OTHER DEPENDENCIES (e.g., OtpLogs if linked by VisitorId)
+                    // If your OtpLogs are linked to the Email string instead of ID:
+                    var associatedOtps = db.OtpLogs.Where(o => o.Email == email).ToList();
+                    if (associatedOtps.Any())
+                    {
+                        db.OtpLogs.RemoveRange(associatedOtps);
+                    }
+
+                    // 4. FINALLY DELETE THE VISITOR RECORDS
                     db.Visitors.RemoveRange(userRecords);
+
                     db.SaveChanges();
 
-                    TempData["Success"] = $"User '{email}' and all their visit history have been deleted.";
+                    TempData["Success"] = $"User '{email}' and all associated logs have been deleted.";
                 }
                 else
                 {
@@ -323,7 +341,9 @@ namespace registar.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Error deleting user: " + ex.Message;
+                // Check for InnerException to see exactly which table caused the block
+                var innerMsg = ex.InnerException?.InnerException?.Message ?? ex.Message;
+                TempData["Error"] = "Could not delete: " + innerMsg;
             }
 
             return RedirectToAction("RegisteredUsers");
@@ -338,12 +358,11 @@ namespace registar.Controllers
         {
             if (Session["AdminEmail"] == null) return RedirectToAction("Index", "Home");
 
-            // Fetch only visitors with Status = 1 (Pending)
-            // Include Department to prevent the "N/A" issue in your HTML
+            // Change Status from 1 to 0 to catch the "Pending" visitors
             var pending = db.Visitors.Include("Department")
-                            .Where(v => v.Status == 1)
-                            .OrderByDescending(v => v.RegisteredAt)
-                            .ToList();
+                                    .Where(v => v.Status == 0)
+                                    .OrderByDescending(v => v.RegisteredAt)
+                                    .ToList();
 
             return View(pending);
         }
@@ -352,11 +371,11 @@ namespace registar.Controllers
         {
             if (Session["AdminEmail"] == null) return RedirectToAction("Index", "Home");
 
-            // Fetch Approved (2) and Rejected (3) visitors for history
+            // History should be Approved (1), Rejected (2), or Completed (3)
             var history = db.Visitors.Include("Department")
-                            .Where(v => v.Status == 2 || v.Status == 3)
-                            .OrderByDescending(v => v.RegisteredAt)
-                            .ToList();
+                                    .Where(v => v.Status == 1 || v.Status == 2 || v.Status == 3)
+                                    .OrderByDescending(v => v.RegisteredAt)
+                                    .ToList();
 
             return View(history);
         }

@@ -4,120 +4,193 @@
     ViewBag.Title = "Visitor Entry";
 }
 
-@* 1. Modern CSS for Validation States *@
-<style>
-    /* ... keep your existing .input-group and .registration-card styles ... */
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    /* Error Text Styling */
-    .text-danger.field-validation-error {
-        font-size: 0.8rem;
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --error: #e11d48;
+        --bg-soft: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+    }
+
+    body {
+        background-color: #f1f5f9;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text-main);
+    }
+
+    .registration-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+        padding: 3rem !important;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .input-group-text {
+        background-color: var(--bg-soft);
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            background-color: #fff;
+        }
+
+    /* Tabs Styling */
+    .nav-pills {
+        background: var(--bg-soft);
+        padding: 5px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+        .nav-pills .nav-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+
+            .nav-pills .nav-link.active {
+                background-color: #fff !important;
+                color: var(--primary) !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+    /* Validation UI */
+    .field-validation-error {
+        color: var(--error);
+        font-size: 0.75rem;
         font-weight: 600;
         margin-top: 5px;
         display: block;
-        color: #e11d48 !important; /* Premium Red */
     }
 
-    /* Input error border */
     .input-validation-error {
-        border-color: #e11d48 !important;
+        border-color: var(--error) !important;
     }
 
-    /* When inside an input group */
-    .is-invalid-group {
-        border: 1px solid #e11d48 !important;
-        box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
+    .is-invalid-group .input-group-text {
+        border-color: var(--error) !important;
+        color: var(--error);
     }
+
+    .btn-submit {
+        background-color: var(--primary);
+        border: none;
+        padding: 1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        letter-spacing: 0.05em;
+    }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+        }
 </style>
 
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="registration-card p-4 p-md-5">
-
-                @* Server-Side Error Summary (Only shows if things go wrong in the Controller) *@
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="alert alert-danger rounded-4 border-0 mb-4">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        @Html.ValidationSummary(true, "Please fix the errors below:")
-                    </div>
-                }
+            <div class="registration-card">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">Visitor Registration</h2>
+                    <p class="text-muted">Fill in the details to generate your security pass.</p>
+                </div>
 
                 @using (Html.BeginForm("Visitor_Registration", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "regForm" }))
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="row mb-4">
-                        @* Email Field *@
-                        <div class="col-md-6 mb-3">
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
                             <label class="form-label">Email Address</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                @Html.TextBoxFor(m => m.Email, new
-                                {
-                                    @class = "form-control",
-                                    placeholder = "name@company.com",
-                                    id = "vEmail",
-                                    style = "text-transform: lowercase;" // Visual feedback for the user
-                                })
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "user_name@domain.com", id = "vEmail" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Email)
                         </div>
 
-                        @* Department Dropdown *@
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Target Department</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-building"></i></span>
-                                @Html.DropDownListFor(m => m.DepartmentId, (SelectList)ViewBag.DepartmentId, "Select Department", new { @class = "form-select" })
+                                @Html.DropDownListFor(m => m.DepartmentId, (SelectList)ViewBag.DepartmentId, "Select", new { @class = "form-select" })
                             </div>
                             @Html.ValidationMessageFor(m => m.DepartmentId)
                         </div>
 
-                        @* Visit Date *@
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Visit Date</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-                                @Html.TextBoxFor(m => m.VisitDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = DateTime.Now.ToString("yyyy-MM-dd") })
+                                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                @Html.TextBoxFor(m => m.VisitDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
                             </div>
                             @Html.ValidationMessageFor(m => m.VisitDate)
                         </div>
 
-                        @* Purpose *@
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Purpose</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Purpose of Visit</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-chat-dots"></i></span>
-                                @Html.TextBoxFor(m => m.Purpose, new { @class = "form-control", placeholder = "Meeting / Maintenance" })
+                                <span class="input-group-text"><i class="bi bi-chat-left-text"></i></span>
+                                @Html.TextBoxFor(m => m.Purpose, new { @class = "form-control", placeholder = "e.g. Client Meeting" })
                             </div>
                             @Html.ValidationMessageFor(m => m.Purpose)
                         </div>
                     </div>
 
-                    @* Tab Navigation *@
-                    <ul class="nav nav-pills mb-4 justify-content-center bg-light p-1 rounded-3" role="tablist">
-                        <li class="nav-item">
-                            <button class="nav-link active" id="single-tab" data-bs-toggle="pill" data-bs-target="#single" type="button" role="tab">Single Visitor</button>
+                    <ul class="nav nav-pills mb-4" role="tablist">
+                        <li class="nav-item flex-fill text-center">
+                            <button class="nav-link active w-100" id="single-tab" data-bs-toggle="pill" data-bs-target="#single" type="button" role="tab">Individual Entry</button>
                         </li>
-                        <li class="nav-item">
-                            <button class="nav-link" id="group-tab" data-bs-toggle="pill" data-bs-target="#group" type="button" role="tab">Group Upload (CSV)</button>
+                        <li class="nav-item flex-fill text-center">
+                            <button class="nav-link w-100" id="group-tab" data-bs-toggle="pill" data-bs-target="#group" type="button" role="tab">CSV Bulk Upload</button>
                         </li>
                     </ul>
 
                     <div class="tab-content">
-                        @* Single Visitor Inputs *@
                         <div class="tab-pane fade show active" id="single" role="tabpanel">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Full Name</label>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Visitor Full Name</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "vName" })
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "vName", placeholder = "John Doe" })
                                     </div>
                                     @Html.ValidationMessageFor(m => m.Name)
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6">
                                     <label class="form-label">Mobile Number</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-phone"></i></span>
@@ -128,226 +201,18 @@
                             </div>
                         </div>
 
-                        @* CSV Upload Inputs *@
                         <div class="tab-pane fade" id="group" role="tabpanel">
-                            <div class="bg-light p-4 rounded-4 border border-dashed text-center">
-                                <i class="bi bi-file-earmark-arrow-up text-primary fs-2"></i>
-                                <input type="file" name="csvFile" id="csvFile" class="form-control mt-2" accept=".csv" />
-                                <p class="text-muted small mt-2">Required: Name, Phone column headers</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <button type="submit" class="btn btn-primary btn-submit w-100">
-                            <i class="bi bi-shield-lock me-2"></i> Register & Send OTP
-                        </button>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-@* 2. Crucial Script Loading Order *@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
-
-<script>
-    @@model registar.Models.Visitor
-
-@{
-    ViewBag.Title = "Visitor Entry";
-}
-
-<style>
-    /* 1. Soft Corporate Theme Palette */
-    :root {
-        --corp-blue: #2c3e50;
-        --corp-soft-blue: #f8fafc;
-        --corp-border: #e2e8f0;
-        --corp-accent: #3b82f6;
-        --corp-error: #ef4444;
-    }
-
-    body { background-color: #f1f5f9; color: var(--corp-blue); }
-
-    .registration-card {
-        background: #ffffff;
-        border-radius: 12px;
-        border: 1px solid var(--corp-border);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    }
-
-    .form-label {
-        font-weight: 500;
-        color: #475569;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-control, .form-select, .input-group-text {
-        border: 1px solid var(--corp-border);
-        border-radius: 8px;
-        padding: 0.6rem 0.75rem;
-        background-color: var(--corp-soft-blue);
-        transition: all 0.2s ease;
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: var(--corp-accent);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        background-color: #fff;
-    }
-
-    /* 2. Soft Validation States */
-    .text-danger.field-validation-error {
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-top: 4px;
-        display: block;
-        color: var(--corp-error) !important;
-    }
-
-    .input-validation-error {
-        border-color: var(--corp-error) !important;
-        background-color: #fffafb !important;
-    }
-
-    .is-invalid-group {
-        border-color: var(--corp-error) !important;
-        border-radius: 8px;
-    }
-
-    /* 3. Soft Tabs */
-    .nav-pills .nav-link {
-        color: #64748b;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: 0.3s;
-    }
-
-    .nav-pills .nav-link.active {
-        background-color: var(--corp-accent) !important;
-        color: white !important;
-    }
-
-    .btn-submit {
-        background-color: var(--corp-accent);
-        border: none;
-        padding: 0.8rem;
-        font-weight: 600;
-        border-radius: 8px;
-        transition: opacity 0.2s;
-    }
-
-    .btn-submit:hover { opacity: 0.9; background-color: #2563eb; }
-</style>
-
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-
-            @* --- ALERT BOX (Success/Info) --- *@
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-
-            <div class="registration-card p-4 p-md-5">
-                <h3 class="mb-4 text-center fw-bold">Visitor Registration</h3>
-
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="alert alert-danger rounded-3 border-0 mb-4 small">
-                        @Html.ValidationSummary(true, "Please resolve the following:")
-                    </div>
-                }
-
-                @using (Html.BeginForm("Visitor_Registration", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "regForm" }))
-                {
-                    @Html.AntiForgeryToken()
-
-                    <div class="row mb-3">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Email Address</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@domain.com", id = "vEmail", style = "text-transform: lowercase;" })
-                            </div>
-                            @Html.ValidationMessageFor(m => m.Email)
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Target Department</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-building text-muted"></i></span>
-                                @Html.DropDownListFor(m => m.DepartmentId, (SelectList)ViewBag.DepartmentId, "Select Department", new { @class = "form-select" })
-                            </div>
-                            @Html.ValidationMessageFor(m => m.DepartmentId)
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Visit Date</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-calendar3 text-muted"></i></span>
-                                @Html.TextBoxFor(m => m.VisitDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", min = DateTime.Now.ToString("yyyy-MM-dd") })
-                            </div>
-                            @Html.ValidationMessageFor(m => m.VisitDate)
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Purpose</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-info-circle text-muted"></i></span>
-                                @Html.TextBoxFor(m => m.Purpose, new { @class = "form-control", placeholder = "Reason for visit" })
-                            </div>
-                            @Html.ValidationMessageFor(m => m.Purpose)
-                        </div>
-                    </div>
-
-                    <ul class="nav nav-pills mb-4 justify-content-center bg-light p-1 rounded-3" role="tablist">
-                        <li class="nav-item flex-fill text-center">
-                            <button class="nav-link active w-100" id="single-tab" data-bs-toggle="pill" data-bs-target="#single" type="button" role="tab">Individual</button>
-                        </li>
-                        <li class="nav-item flex-fill text-center">
-                            <button class="nav-link w-100" id="group-tab" data-bs-toggle="pill" data-bs-target="#group" type="button" role="tab">Bulk Upload</button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content border-top pt-4">
-                        <div class="tab-pane fade show active" id="single" role="tabpanel">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Full Name</label>
-                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "vName" })
-                                    @Html.ValidationMessageFor(m => m.Name)
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Phone Number</label>
-                                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "vPhone", maxlength = "10" })
-                                    @Html.ValidationMessageFor(m => m.Phone)
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="group" role="tabpanel">
-                            <div class="p-4 border rounded-3 text-center bg-light">
-                                <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
-                                <input type="file" name="csvFile" id="csvFile" class="form-control mt-3" accept=".csv" />
-                                <p class="text-muted mt-2 small">Accepted format: .CSV with Name and Phone headers</p>
+                            <div class="p-5 border-2 border-dashed rounded-4 text-center bg-light">
+                                <i class="bi bi-cloud-upload fs-1 text-primary mb-3 d-block"></i>
+                                <input type="file" name="csvFile" id="csvFile" class="form-control" accept=".csv" />
+                                <p class="text-muted mt-3 small">Format: <strong>Name, Phone</strong> headers required.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-5">
-                        <button type="submit" class="btn btn-primary btn-submit w-100 shadow-sm">
-                            Generate OTP & Complete Registration
+                        <button type="submit" class="btn btn-primary btn-submit w-100 text-white shadow">
+                            REGISTER & GENERATE PASS
                         </button>
                     </div>
                 }
@@ -356,8 +221,7 @@
     </div>
 </div>
 
-@* Scripts (Logic remains identical to your request) *@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 
@@ -365,36 +229,50 @@
     $(document).ready(function () {
         const $form = $('#regForm');
 
-        $('#vEmail').on('input', function () { this.value = this.value.toLowerCase(); });
-        $('#vPhone').on('input', function () { this.value = this.value.replace(/[^0-9]/g, ''); });
+        // Force Email Lowercase and block spaces
+        $('#vEmail').on('input', function () {
+            this.value = this.value.toLowerCase().replace(/\s/g, '');
+        });
 
+        // Block everything except alphabets and spaces for Name
+        $('#vName').on('input', function () {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+
+        // Block non-numeric for Phone
+        $('#vPhone').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Tab dynamic validation logic
         $('#group-tab').on('click', function () {
             $('#vName, #vPhone').rules('remove', 'required');
             $('#csvFile').rules('add', { required: true });
-            $form.validate().resetForm();
         });
 
         $('#single-tab').on('click', function () {
-            $('#vName').rules('add', { required: true });
-            $('#vPhone').rules('add', { required: true });
+            $('#vName, #vPhone').rules('add', { required: true });
             $('#csvFile').rules('remove', 'required');
-            $form.validate().resetForm();
         });
 
-        $form.on('keyup blur change', 'input', function () {
-            if ($(this).valid()) { $(this).closest('.input-group').removeClass('is-invalid-group'); }
-        });
-
+        // Submit Guard
         $form.on('submit', function (e) {
-            var emailVal = $('#vEmail').val();
-            if (emailVal) { $('#vEmail').val(emailVal.toLowerCase().trim()); }
+            let emailVal = $('#vEmail').val().trim();
+            // Strict Regex: chars/underscores +  + chars/underscores + dot + chars
+            let emailPattern = /^[a-zA-Z0-9_]+@@[a-zA-Z0-9_]+\.[a-zA-Z]{2,}$/;
+
+            if (emailVal !== "" && !emailPattern.test(emailVal)) {
+                e.preventDefault();
+                alert("Please enter a valid email. Only letters, numbers and underscores are allowed. Must include '' and '.'");
+                $('#vEmail').focus();
+                return false;
+            }
 
             if (!$form.valid()) {
                 e.preventDefault();
-                $('.form-control.input-validation-error').closest('.input-group').addClass('is-invalid-group');
+                $('.input-validation-error').closest('.input-group').addClass('is-invalid-group');
                 return false;
             }
         });
     });
-</script>
 </script>

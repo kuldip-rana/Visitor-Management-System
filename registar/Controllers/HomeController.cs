@@ -20,6 +20,10 @@ namespace registar.Controllers
         // GET: Login/Signup Page
         public ActionResult Index() => View();
 
+        public ActionResult About() => View();
+
+        public ActionResult Contact() => View();
+
         //==================================================
         // LOGIN & OTP LOGIC (Keeping your older logic)
         //==================================================
